@@ -1,0 +1,16 @@
+# Root
+node_modules
+.env
+dist
+*.log
+
+# Frontend
+frontend/.next
+frontend/out
+
+# Backend
+backend/dist
+backend/coverage
+
+# DB
+*.db
