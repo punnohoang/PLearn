@@ -220,7 +220,7 @@ export default function ProfilePage() {
                                             onClick={handleUpdateProfile}
                                             disabled={
                                                 updating ||
-                                                (password &&
+                                                (!!password &&
                                                     password !==
                                                     confirmPassword)
                                             }
