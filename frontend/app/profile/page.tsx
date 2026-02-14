@@ -300,9 +300,9 @@ export default function ProfilePage() {
                                                     </h4>
                                                     <span
                                                         className={`text-sm font-bold px-3 py-1 rounded ${enrollment.progress ===
-                                                                100
-                                                                ? "bg-green-100 text-green-800"
-                                                                : "bg-blue-100 text-blue-800"
+                                                            100
+                                                            ? "bg-green-100 text-green-800"
+                                                            : "bg-blue-100 text-blue-800"
                                                             }`}
                                                     >
                                                         {enrollment.progress}%
