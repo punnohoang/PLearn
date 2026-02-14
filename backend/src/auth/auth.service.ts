@@ -1,4 +1,4 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { Injectable, UnauthorizedException, BadRequestException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { PrismaService } from '../prisma/prisma.service';
 import * as bcrypt from 'bcryptjs';
@@ -13,17 +13,32 @@ export class AuthService {
     ) { }
 
     async register(dto: RegisterDto) {
-        const hashed = await bcrypt.hash(dto.password, 10);
-        const user = await this.prisma.user.create({
-            data: { ...dto, password: hashed },
-        });
-        return this.login({ email: user.email, password: dto.password });
+        try {
+            // Check if email already exists
+            const existingUser = await this.prisma.user.findUnique({
+                where: { email: dto.email },
+            });
+            if (existingUser) {
+                throw new BadRequestException('Email đã được sử dụng. Vui lòng sử dụng email khác.');
+            }
+
+            const hashed = await bcrypt.hash(dto.password, 10);
+            const user = await this.prisma.user.create({
+                data: { ...dto, password: hashed },
+            });
+            return this.login({ email: user.email, password: dto.password });
+        } catch (error: any) {
+            if (error.code === 'P2002') {
+                throw new BadRequestException('Email đã được sử dụng. Vui lòng sử dụng email khác.');
+            }
+            throw error;
+        }
     }
 
     async login(dto: LoginDto) {
         const user = await this.prisma.user.findUnique({ where: { email: dto.email } });
         if (!user || !(await bcrypt.compare(dto.password, user.password))) {
-            throw new UnauthorizedException('Invalid credentials');
+            throw new UnauthorizedException('Email hoặc mật khẩu không chính xác.');
         }
         const payload = { sub: user.id, email: user.email, role: user.role };
         return { access_token: this.jwtService.sign(payload) };
