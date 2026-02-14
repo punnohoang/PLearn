@@ -1,7 +1,11 @@
 import axios from 'axios';
 
+const baseURL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000';
+
+console.log('API baseURL:', baseURL); // Debug log
+
 const api = axios.create({
-    baseURL: process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000',
+    baseURL,
     headers: { 'Content-Type': 'application/json' },
 });
 
@@ -10,5 +14,17 @@ api.interceptors.request.use((config) => {
     if (token) config.headers.Authorization = `Bearer ${token}`;
     return config;
 });
+
+api.interceptors.response.use(
+    (response) => response,
+    (error) => {
+        console.error('API Error:', {
+            status: error.response?.status,
+            message: error.response?.data?.message,
+            url: error.config?.url,
+        });
+        return Promise.reject(error);
+    }
+);
 
 export default api;
