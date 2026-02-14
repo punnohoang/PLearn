@@ -6,16 +6,37 @@ import { CreateLessonDto } from '../common/dto/create-lesson.dto';
 export class LessonsService {
     constructor(private prisma: PrismaService) { }
 
-    create(dto: CreateLessonDto, courseId: string) {
-        return this.prisma.lesson.create({
+    async create(dto: CreateLessonDto, courseId: string) {
+        return await this.prisma.lesson.create({
             data: { ...dto, courseId },
+            include: { course: true },
         });
     }
 
-    findByCourse(courseId: string) {
-        return this.prisma.lesson.findMany({
+    async findByCourse(courseId: string) {
+        return await this.prisma.lesson.findMany({
             where: { courseId },
             orderBy: { order: 'asc' },
+        });
+    }
+
+    async findOne(id: string) {
+        return await this.prisma.lesson.findUnique({
+            where: { id },
+            include: { course: true },
+        });
+    }
+
+    async update(id: string, dto: CreateLessonDto) {
+        return await this.prisma.lesson.update({
+            where: { id },
+            data: dto,
+        });
+    }
+
+    async remove(id: string) {
+        return await this.prisma.lesson.delete({
+            where: { id },
         });
     }
 }

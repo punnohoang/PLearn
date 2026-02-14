@@ -6,25 +6,41 @@ import { CreateCourseDto } from '../common/dto/create-course.dto';
 export class CoursesService {
     constructor(private prisma: PrismaService) { }
 
-    create(dto: CreateCourseDto, instructorId: string) {
-        return this.prisma.course.create({
+    async create(dto: CreateCourseDto, instructorId: string) {
+        return await this.prisma.course.create({
             data: { ...dto, instructorId },
+            include: { instructor: true, lessons: true, enrollments: true },
         });
     }
 
-    findAll() {
-        return this.prisma.course.findMany({ include: { instructor: true } });
+    async findAll() {
+        return await this.prisma.course.findMany({
+            include: { instructor: true, lessons: true, _count: { select: { enrollments: true } } },
+        });
     }
 
-    findOne(id: string) {
-        return this.prisma.course.findUnique({ where: { id }, include: { instructor: true } });
+    async findOne(id: string) {
+        return await this.prisma.course.findUnique({
+            where: { id },
+            include: {
+                instructor: true,
+                lessons: { orderBy: { order: 'asc' } },
+                enrollments: { include: { user: true } },
+            },
+        });
     }
 
-    update(id: string, dto: CreateCourseDto) {
-        return this.prisma.course.update({ where: { id }, data: dto });
+    async update(id: string, dto: CreateCourseDto) {
+        return await this.prisma.course.update({
+            where: { id },
+            data: dto,
+            include: { instructor: true, lessons: true },
+        });
     }
 
-    remove(id: string) {
-        return this.prisma.course.delete({ where: { id } });
+    async remove(id: string) {
+        return await this.prisma.course.delete({
+            where: { id },
+        });
     }
 }
