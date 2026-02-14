@@ -39,7 +39,7 @@ model Enrollment {
   courseId  String
   enrolledAt DateTime @default(now())
   progress   Int      @default(0)  // %
-  
+
   @@unique([userId, courseId])
 }
 
