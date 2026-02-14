@@ -1,4 +1,4 @@
-import { Controller, Post, Get, Body, Param, UseGuards } from '@nestjs/common';
+import { Controller, Post, Get, Body, Param, UseGuards, Patch, Delete } from '@nestjs/common';
 import { LessonsService } from './lessons.service';
 import { CreateLessonDto } from '../common/dto/create-lesson.dto';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
@@ -16,5 +16,22 @@ export class LessonsController {
     @Get(':courseId')
     findByCourse(@Param('courseId') courseId: string) {
         return this.lessonsService.findByCourse(courseId);
+    }
+
+    @Get('detail/:id')
+    findOne(@Param('id') id: string) {
+        return this.lessonsService.findOne(id);
+    }
+
+    @UseGuards(JwtAuthGuard)
+    @Patch(':id')
+    update(@Param('id') id: string, @Body() dto: CreateLessonDto) {
+        return this.lessonsService.update(id, dto);
+    }
+
+    @UseGuards(JwtAuthGuard)
+    @Delete(':id')
+    remove(@Param('id') id: string) {
+        return this.lessonsService.remove(id);
     }
 }

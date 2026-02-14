@@ -4,7 +4,7 @@ import { CreateEnrollmentDto } from '../common/dto/create-enrollment.dto';
 
 @Injectable()
 export class EnrollmentsService {
-  constructor(private prisma: PrismaService) {}
+  constructor(private prisma: PrismaService) { }
 
   async create(dto: CreateEnrollmentDto, userId: string) {
     try {
