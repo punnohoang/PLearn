@@ -176,7 +176,7 @@ export default function CoursesPage() {
                                         <h3 className="font-bold text-xl mb-2">{course.title}</h3>
                                         <p className="text-gray-600 text-sm mb-4">{course.description}</p>
                                         <p className="text-sm text-gray-500 mb-4">Giảng viên: <strong>{course.instructor.name}</strong></p>
-                                        
+
                                         <div className="flex gap-2">
                                             <Link href={`/courses/${course.id}`} className="flex-1">
                                                 <button className="w-full bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 text-sm">
