@@ -24,19 +24,29 @@ export class AuthService {
 
             const hashed = await bcrypt.hash(dto.password, 10);
             const user = await this.prisma.user.create({
-                data: { ...dto, password: hashed },
+                data: {
+                    email: dto.email.toLowerCase(),
+                    password: hashed,
+                    name: dto.name,
+                },
             });
             return this.login({ email: user.email, password: dto.password });
         } catch (error: any) {
+            console.error('Register error:', error);
             if (error.code === 'P2002') {
                 throw new BadRequestException('Email đã được sử dụng. Vui lòng sử dụng email khác.');
             }
-            throw error;
+            if (error instanceof BadRequestException) {
+                throw error;
+            }
+            throw new BadRequestException('Đăng ký thất bại. Vui lòng thử lại.');
         }
     }
 
     async login(dto: LoginDto) {
-        const user = await this.prisma.user.findUnique({ where: { email: dto.email } });
+        const user = await this.prisma.user.findUnique({
+            where: { email: dto.email.toLowerCase() }
+        });
         if (!user || !(await bcrypt.compare(dto.password, user.password))) {
             throw new UnauthorizedException('Email hoặc mật khẩu không chính xác.');
         }

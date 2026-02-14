@@ -34,26 +34,43 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     const login = async (email: string, password: string) => {
         try {
             setError(null);
-            const res = await api.post('/auth/login', { email, password });
+            const res = await api.post('/auth/login', {
+                email: email.toLowerCase().trim(),
+                password
+            });
             localStorage.setItem('token', res.data.access_token);
-            // setUser...
             window.location.href = '/courses';
         } catch (err: any) {
             const message = err.response?.data?.message || 'Đăng nhập thất bại. Vui lòng kiểm tra email và mật khẩu.';
             setError(message);
-            console.error('Login error:', err);
+            console.error('Login error details:', {
+                status: err.response?.status,
+                message: err.response?.data?.message,
+                error: err.response?.data?.error,
+                fullError: err.message,
+            });
         }
     };
 
     const register = async (email: string, password: string, name: string) => {
         try {
             setError(null);
-            await api.post('/auth/register', { email, password, name });
-            await login(email, password);
+            const res = await api.post('/auth/register', {
+                email: email.toLowerCase().trim(),
+                password,
+                name: name.trim()
+            });
+            localStorage.setItem('token', res.data.access_token);
+            window.location.href = '/courses';
         } catch (err: any) {
-            const message = err.response?.data?.message || 'Đăng ký thất bại. Email có thể đã được sử dụng.';
+            const message = err.response?.data?.message || 'Đăng ký thất bại. Vui lòng thử lại.';
             setError(message);
-            console.error('Register error:', err);
+            console.error('Register error details:', {
+                status: err.response?.status,
+                message: err.response?.data?.message,
+                error: err.response?.data?.error,
+                fullError: err.message,
+            });
         }
     };
 
