@@ -1,0 +1,20 @@
+import { Controller, Post, Get, Body, Param, UseGuards } from '@nestjs/common';
+import { LessonsService } from './lessons.service';
+import { CreateLessonDto } from '../common/dto/create-lesson.dto';
+import { JwtAuthGuard } from '../auth/jwt-auth.guard';
+
+@Controller('lessons')
+export class LessonsController {
+    constructor(private readonly lessonsService: LessonsService) { }
+
+    @UseGuards(JwtAuthGuard)
+    @Post(':courseId')
+    create(@Param('courseId') courseId: string, @Body() dto: CreateLessonDto) {
+        return this.lessonsService.create(dto, courseId);
+    }
+
+    @Get(':courseId')
+    findByCourse(@Param('courseId') courseId: string) {
+        return this.lessonsService.findByCourse(courseId);
+    }
+}

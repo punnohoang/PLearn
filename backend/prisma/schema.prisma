@@ -16,6 +16,7 @@ model User {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   courses   Course[] @relation("InstructorCourses")
+  enrollments  Enrollment[]
 }
 
 model Course {
@@ -26,7 +27,32 @@ model Course {
   instructorId String
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
+  enrollments  Enrollment[]
+  lessons      Lesson[]
 }
+
+model Enrollment {
+  id        String   @id @default(cuid())
+  user      User     @relation(fields: [userId], references: [id])
+  userId    String
+  course    Course   @relation(fields: [courseId], references: [id])
+  courseId  String
+  enrolledAt DateTime @default(now())
+  progress   Int      @default(0)  // %
+  
+  @@unique([userId, courseId])
+}
+
+model Lesson {
+  id          String   @id @default(cuid())
+  title       String
+  content     String   // markdown hoặc video URL
+  course      Course   @relation(fields: [courseId], references: [id])
+  courseId    String
+  order       Int      // thứ tự bài
+  createdAt   DateTime @default(now())
+}
+
 enum Role {
   STUDENT
   INSTRUCTOR

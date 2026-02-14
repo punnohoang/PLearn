@@ -51,6 +51,22 @@ export default function Courses() {
                     </div>
                 ))}
             </div>
+
+            <div className="mt-12">
+                <h2 className="text-2xl font-bold mb-4">Bài học</h2>
+                <input placeholder="Course ID" id="courseId" className="border p-2" />
+                <button
+                    onClick={async () => {
+                        const id = (document.getElementById('courseId') as HTMLInputElement).value;
+                        const res = await api.get(`/lessons/${id}`);
+                        console.log(res.data);
+                        alert('Xem console');
+                    }}
+                    className="ml-4 bg-blue-600 text-white px-4 py-2"
+                >
+                    Xem bài học
+                </button>
+            </div>
         </div>
     );
 }
