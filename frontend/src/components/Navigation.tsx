@@ -83,6 +83,18 @@ export default function Navigation() {
                                                 </button>
                                             </Link>
 
+                                            {/* Admin Dashboard Link - Only for ADMIN role */}
+                                            {user.role === 'ADMIN' && (
+                                                <Link href="/admin">
+                                                    <button
+                                                        onClick={() => setShowMenu(false)}
+                                                        className="w-full text-left px-4 py-2 hover:bg-yellow-100 rounded transition text-amber-700 font-semibold bg-yellow-50"
+                                                    >
+                                                        👑 Trang Quản Trị
+                                                    </button>
+                                                </Link>
+                                            )}
+
                                             {/* Logout Button */}
                                             <button
                                                 onClick={handleLogout}
