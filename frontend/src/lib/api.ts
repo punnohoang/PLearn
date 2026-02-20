@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const baseURL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000';
+const baseURL = process.env.NEXT_PUBLIC_API_URL || 'https://plearn-backend-vglq.onrender.com';
 
 console.log('API baseURL:', baseURL); // Debug log
 
