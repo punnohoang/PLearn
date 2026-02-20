@@ -108,6 +108,57 @@ async function main() {
     }
     console.log(`✅ ${lessons.length} lessons created`);
 
+    // 4. Create test users with different roles (for RBAC testing)
+    console.log('\n🔐 Creating test users for RBAC testing...');
+    
+    const testUsers = [
+        {
+            email: 'admin@example.com',
+            password: 'admin123456',
+            name: 'Admin User',
+            role: 'ADMIN',
+        },
+        {
+            email: 'manager@example.com',
+            password: 'manager123456',
+            name: 'Manager User',
+            role: 'MANAGER',
+        },
+        {
+            email: 'hr@example.com',
+            password: 'hr123456',
+            name: 'HR User',
+            role: 'HR',
+        },
+        {
+            email: 'instructor@example.com',
+            password: 'instructor123456',
+            name: 'Instructor User',
+            role: 'INSTRUCTOR',
+        },
+        {
+            email: 'student@example.com',
+            password: 'student123456',
+            name: 'Student User',
+            role: 'STUDENT',
+        },
+    ];
+
+    for (const testUser of testUsers) {
+        const hashedPassword = await bcrypt.hash(testUser.password, 10);
+        await prisma.user.upsert({
+            where: { email: testUser.email },
+            update: {},
+            create: {
+                email: testUser.email,
+                password: hashedPassword,
+                name: testUser.name,
+                role: testUser.role as any,
+            },
+        });
+        console.log(`✅ ${testUser.role} user created: ${testUser.email} (password: ${testUser.password})`);
+    }
+
     console.log('✅ Database seeded successfully!');
 }
 
