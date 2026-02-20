@@ -1,0 +1,7 @@
+{
+  "env": {
+    "NEXT_PUBLIC_API_URL": "https://plearn-backend-vglq.onrender.com"
+  },
+  "buildCommand": "next build",
+  "outputDirectory": ".next"
+}
