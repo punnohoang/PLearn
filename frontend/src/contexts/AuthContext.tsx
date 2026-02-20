@@ -25,7 +25,7 @@ function decodeToken(token: string): any {
     try {
         const parts = token.split('.');
         if (parts.length !== 3) return null;
-        
+
         const decoded = JSON.parse(
             atob(parts[1].replace(/-/g, '+').replace(/_/g, '/'))
         );
@@ -67,7 +67,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
             });
             const token = res.data.access_token;
             localStorage.setItem('token', token);
-            
+
             // Decode and set user
             const decoded = decodeToken(token);
             if (decoded) {
@@ -78,7 +78,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
                     role: decoded.role,
                 });
             }
-            
+
             // Redirect after setting user
             setTimeout(() => {
                 window.location.href = '/courses';
@@ -105,7 +105,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
             });
             const token = res.data.access_token;
             localStorage.setItem('token', token);
-            
+
             // Decode and set user
             const decoded = decodeToken(token);
             if (decoded) {
@@ -116,7 +116,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
                     role: decoded.role,
                 });
             }
-            
+
             // Redirect after setting user
             setTimeout(() => {
                 window.location.href = '/courses';

@@ -8,6 +8,7 @@ import { CoursesModule } from './courses/courses.module';
 import { EnrollmentsModule } from './enrollments/enrollments.module';
 import { LessonsModule } from './lessons/lessons.module';
 import { AiModule } from './ai/ai.module';
+import { AdminModule } from './admin/admin.module';
 
 @Module({
   imports: [
@@ -17,6 +18,7 @@ import { AiModule } from './ai/ai.module';
     EnrollmentsModule,
     LessonsModule,
     AiModule,
+    AdminModule,
   ],
   controllers: [AppController],
   providers: [PrismaService, AppService],
