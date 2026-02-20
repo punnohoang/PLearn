@@ -20,15 +20,42 @@ interface AuthContextType {
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
+// Helper function to decode JWT token
+function decodeToken(token: string): any {
+    try {
+        const parts = token.split('.');
+        if (parts.length !== 3) return null;
+        
+        const decoded = JSON.parse(
+            atob(parts[1].replace(/-/g, '+').replace(/_/g, '/'))
+        );
+        return decoded;
+    } catch (e) {
+        console.error('Error decoding token:', e);
+        return null;
+    }
+}
+
 export function AuthProvider({ children }: { children: ReactNode }) {
     const [user, setUser] = useState<User | null>(null);
     const [error, setError] = useState<string | null>(null);
+    const [loading, setLoading] = useState(true);
 
+    // Load user from token on mount
     useEffect(() => {
         const token = localStorage.getItem('token');
         if (token) {
-            // TODO: decode token để set user (sẽ làm sau)
+            const decoded = decodeToken(token);
+            if (decoded) {
+                setUser({
+                    id: decoded.sub,
+                    email: decoded.email,
+                    name: decoded.name || 'User',
+                    role: decoded.role,
+                });
+            }
         }
+        setLoading(false);
     }, []);
 
     const login = async (email: string, password: string) => {
@@ -38,8 +65,24 @@ export function AuthProvider({ children }: { children: ReactNode }) {
                 email: email.toLowerCase().trim(),
                 password
             });
-            localStorage.setItem('token', res.data.access_token);
-            window.location.href = '/courses';
+            const token = res.data.access_token;
+            localStorage.setItem('token', token);
+            
+            // Decode and set user
+            const decoded = decodeToken(token);
+            if (decoded) {
+                setUser({
+                    id: decoded.sub,
+                    email: decoded.email,
+                    name: decoded.name || 'User',
+                    role: decoded.role,
+                });
+            }
+            
+            // Redirect after setting user
+            setTimeout(() => {
+                window.location.href = '/courses';
+            }, 100);
         } catch (err: any) {
             const message = err.response?.data?.message || 'Đăng nhập thất bại. Vui lòng kiểm tra email và mật khẩu.';
             setError(message);
@@ -60,8 +103,24 @@ export function AuthProvider({ children }: { children: ReactNode }) {
                 password,
                 name: name.trim()
             });
-            localStorage.setItem('token', res.data.access_token);
-            window.location.href = '/courses';
+            const token = res.data.access_token;
+            localStorage.setItem('token', token);
+            
+            // Decode and set user
+            const decoded = decodeToken(token);
+            if (decoded) {
+                setUser({
+                    id: decoded.sub,
+                    email: decoded.email,
+                    name: decoded.name || name,
+                    role: decoded.role,
+                });
+            }
+            
+            // Redirect after setting user
+            setTimeout(() => {
+                window.location.href = '/courses';
+            }, 100);
         } catch (err: any) {
             const message = err.response?.data?.message || 'Đăng ký thất bại. Vui lòng thử lại.';
             setError(message);
@@ -79,6 +138,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         setUser(null);
         window.location.href = '/login';
     };
+
+    if (loading) {
+        return <div />;
+    }
 
     return (
         <AuthContext.Provider value={{ user, login, register, logout, error }}>

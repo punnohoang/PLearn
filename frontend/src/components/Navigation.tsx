@@ -30,7 +30,7 @@ export default function Navigation() {
                             <Link href="/dashboard" className="text-gray-700 hover:text-blue-600 font-semibold transition">
                                 📊 Dashboard
                             </Link>
-                            
+
                             {/* User Profile Dropdown */}
                             <div className="relative">
                                 <button
@@ -56,7 +56,7 @@ export default function Navigation() {
                                                     <p className="text-sm text-gray-600">{user.email}</p>
                                                 </div>
                                             </div>
-                                            
+
                                             {/* User ID */}
                                             <div className="bg-gray-50 p-3 rounded text-sm">
                                                 <p className="text-gray-600 text-xs font-semibold">ID NGƯỜI DÙNG</p>
@@ -82,7 +82,7 @@ export default function Navigation() {
                                                     📊 Bảng điều khiển
                                                 </button>
                                             </Link>
-                                            
+
                                             {/* Logout Button */}
                                             <button
                                                 onClick={handleLogout}
