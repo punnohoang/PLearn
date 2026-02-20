@@ -110,7 +110,7 @@ async function main() {
 
     // 4. Create test users with different roles (for RBAC testing)
     console.log('\n🔐 Creating test users for RBAC testing...');
-    
+
     const testUsers = [
         {
             email: 'admin@example.com',

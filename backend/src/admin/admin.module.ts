@@ -6,4 +6,4 @@ import { PrismaService } from '../prisma/prisma.service';
     controllers: [AdminController],
     providers: [PrismaService],
 })
-export class AdminModule {}
+export class AdminModule { }

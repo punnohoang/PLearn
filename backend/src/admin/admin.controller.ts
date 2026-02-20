@@ -8,7 +8,7 @@ import { Role } from '@prisma/client';
 @Controller('admin')
 @UseGuards(JwtAuthGuard, RolesGuard)
 export class AdminController {
-    constructor(private prisma: PrismaService) {}
+    constructor(private prisma: PrismaService) { }
 
     @Get('users')
     @Roles('ADMIN', 'MANAGER', 'HR')
@@ -80,7 +80,7 @@ export class AdminController {
     async deleteUser(@Param('id') id: string) {
         // Delete related data first
         await this.prisma.enrollment.deleteMany({ where: { userId: id } });
-        
+
         return this.prisma.user.delete({
             where: { id },
         });

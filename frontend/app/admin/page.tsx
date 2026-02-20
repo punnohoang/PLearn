@@ -229,9 +229,8 @@ export default function AdminPage() {
                                                     value={selectedRole[u.id] || u.role}
                                                     onChange={(e) => handleRoleChange(u.id, e.target.value)}
                                                     disabled={updatingRole === u.id}
-                                                    className={`px-3 py-1 rounded text-sm font-medium border border-gray-300 ${
-                                                        updatingRole === u.id ? 'opacity-50 cursor-not-allowed' : ''
-                                                    }`}
+                                                    className={`px-3 py-1 rounded text-sm font-medium border border-gray-300 ${updatingRole === u.id ? 'opacity-50 cursor-not-allowed' : ''
+                                                        }`}
                                                     style={{
                                                         backgroundColor: getRoleColor(selectedRole[u.id] || u.role).bg,
                                                         color: getRoleColor(selectedRole[u.id] || u.role).text,
@@ -248,11 +247,10 @@ export default function AdminPage() {
                                                 <button
                                                     onClick={() => handleDeleteUser(u.id)}
                                                     disabled={user.id === u.id}
-                                                    className={`px-3 py-1 rounded text-sm font-medium ${
-                                                        user.id === u.id
+                                                    className={`px-3 py-1 rounded text-sm font-medium ${user.id === u.id
                                                             ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
                                                             : 'bg-red-100 text-red-700 hover:bg-red-200'
-                                                    }`}
+                                                        }`}
                                                 >
                                                     Delete
                                                 </button>
