@@ -1,4 +1,4 @@
-import { Controller, Post, Get, Body, Param, Patch, UseGuards, Req } from '@nestjs/common';
+import { Controller, Post, Get, Body, Param, Patch, Delete, UseGuards, Req } from '@nestjs/common';
 import { EnrollmentsService } from './enrollments.service';
 import { CreateEnrollmentDto } from '../common/dto/create-enrollment.dto';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
@@ -20,8 +20,14 @@ export class EnrollmentsController {
     }
 
     @UseGuards(JwtAuthGuard)
-    @Patch(':id/progress')
-    updateProgress(@Param('id') id: string, @Body('progress') progress: number) {
-        return this.enrollmentsService.updateProgress(id, progress);
+    @Patch(':id')
+    update(@Param('id') id: string, @Body() body: any) {
+        return this.enrollmentsService.updateProgress(id, body.progress);
+    }
+
+    @UseGuards(JwtAuthGuard)
+    @Delete(':id')
+    remove(@Param('id') id: string) {
+        return this.enrollmentsService.remove(id);
     }
 }
