@@ -13,6 +13,9 @@ export default function CoursesPage() {
     const [description, setDescription] = useState("");
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState("");
+    const [searchQuery, setSearchQuery] = useState("");
+    const [currentPage, setCurrentPage] = useState(1);
+    const itemsPerPage = 9;
     const { user } = useAuth();
 
     useEffect(() => {
@@ -34,13 +37,13 @@ export default function CoursesPage() {
             const res = await api.get("/enrollments");
             setMyCourses(res.data || []);
         } catch (err) {
-            console.error("Không thể tải khóa học của tôi");
+            console.error("Lỗi tải khóa học của tôi");
         }
     };
 
     const handleCreateCourse = async () => {
-        if (!title.trim()) {
-            setError("Vui lòng nhập tên khóa học");
+        if (!title.trim() || !description.trim()) {
+            alert("Vui lòng điền đủ thông tin");
             return;
         }
 
@@ -50,10 +53,9 @@ export default function CoursesPage() {
             setTitle("");
             setDescription("");
             setShowCreateForm(false);
-            setError("");
             loadCourses();
         } catch (err: any) {
-            setError(err.response?.data?.message || "Lỗi tạo khóa học");
+            alert(err.response?.data?.message || "Lỗi tạo khóa học");
         } finally {
             setLoading(false);
         }
@@ -68,6 +70,19 @@ export default function CoursesPage() {
             alert(err.response?.data?.message || "Không thể đăng ký khóa học");
         }
     };
+
+    // Filter & Search
+    const filteredCourses = courses.filter(course => {
+        const matchSearch = course.title?.toLowerCase().includes(searchQuery.toLowerCase()) || 
+                           course.description?.toLowerCase().includes(searchQuery.toLowerCase());
+        return matchSearch;
+    });
+
+    const totalPages = Math.ceil(filteredCourses.length / itemsPerPage);
+    const paginatedCourses = filteredCourses.slice(
+        (currentPage - 1) * itemsPerPage,
+        currentPage * itemsPerPage
+    );
 
     return (
         <div className="min-h-screen bg-gray-50">
@@ -164,38 +179,98 @@ export default function CoursesPage() {
 
                 {/* Available Courses */}
                 <div>
-                    <h2 className="text-3xl font-bold mb-6">🔍 Tất cả khóa học</h2>
-                    {courses.length === 0 ? (
-                        <p className="text-gray-600">Không có khóa học nào</p>
-                    ) : (
-                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                            {courses.map((course: any) => {
-                                const isEnrolled = myCourses.some((e) => e.course.id === course.id);
-                                return (
-                                    <div key={course.id} className="bg-white p-6 rounded-lg shadow hover:shadow-lg transition">
-                                        <h3 className="font-bold text-xl mb-2">{course.title}</h3>
-                                        <p className="text-gray-600 text-sm mb-4">{course.description}</p>
-                                        <p className="text-sm text-gray-500 mb-4">Giảng viên: <strong>{course.instructor.name}</strong></p>
+                    <h2 className="text-3xl font-bold mb-6">🔍 Tất cả khóa học ({filteredCourses.length})</h2>
+                    
+                    {/* Search & Filter */}
+                    <div className="mb-6 space-y-4 bg-white p-6 rounded-lg shadow">
+                        <input
+                            type="text"
+                            placeholder="🔎 Tìm kiếm khóa học..."
+                            value={searchQuery}
+                            onChange={(e) => {
+                                setSearchQuery(e.target.value);
+                                setCurrentPage(1);
+                            }}
+                            className="w-full border border-gray-300 p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
+                        />
+                    </div>
 
-                                        <div className="flex gap-2">
-                                            <Link href={`/courses/${course.id}`} className="flex-1">
-                                                <button className="w-full bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 text-sm">
-                                                    Xem chi tiết
-                                                </button>
-                                            </Link>
-                                            {!isEnrolled && user && (
-                                                <button
-                                                    onClick={() => handleEnrollCourse(course.id)}
-                                                    className="flex-1 bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 text-sm"
-                                                >
-                                                    Đăng ký
-                                                </button>
-                                            )}
+                    {filteredCourses.length === 0 ? (
+                        <p className="text-gray-600 text-center py-12">Không tìm thấy khóa học nào khớp với tìm kiếm của bạn</p>
+                    ) : (
+                        <>
+                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+                                {paginatedCourses.map((course: any) => {
+                                    const isEnrolled = myCourses.some((e) => e.course.id === course.id);
+                                    return (
+                                        <div key={course.id} className="bg-white p-6 rounded-lg shadow hover:shadow-lg transition">
+                                            {/* Course Thumbnail Placeholder */}
+                                            <div className="w-full h-40 bg-gradient-to-br from-blue-400 to-purple-500 rounded-lg mb-4 flex items-center justify-center">
+                                                <span className="text-white text-4xl">📚</span>
+                                            </div>
+                                            
+                                            <h3 className="font-bold text-xl mb-2 line-clamp-2">{course.title}</h3>
+                                            <p className="text-gray-600 text-sm mb-4 line-clamp-2">{course.description}</p>
+                                            <p className="text-sm text-gray-500 mb-4">👨‍🏫 {course.instructor.name}</p>
+                                            <p className="text-xs text-gray-400 mb-4">👥 {course._count?.enrollments || 0} học viên</p>
+
+                                            <div className="flex gap-2">
+                                                <Link href={`/courses/${course.id}`} className="flex-1">
+                                                    <button className="w-full bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 text-sm font-semibold">
+                                                        Xem chi tiết
+                                                    </button>
+                                                </Link>
+                                                {!isEnrolled && user && (
+                                                    <button
+                                                        onClick={() => handleEnrollCourse(course.id)}
+                                                        className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 text-sm font-semibold"
+                                                    >
+                                                        Đăng ký
+                                                    </button>
+                                                )}
+                                            </div>
                                         </div>
+                                    );
+                                })}
+                            </div>
+
+                            {/* Pagination */}
+                            {totalPages > 1 && (
+                                <div className="flex justify-center items-center gap-2 mt-8">
+                                    <button
+                                        onClick={() => setCurrentPage(Math.max(1, currentPage - 1))}
+                                        disabled={currentPage === 1}
+                                        className="px-4 py-2 border border-gray-300 rounded disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-100"
+                                    >
+                                        ← Trước
+                                    </button>
+                                    
+                                    <div className="flex gap-2">
+                                        {Array.from({ length: totalPages }, (_, i) => i + 1).map(page => (
+                                            <button
+                                                key={page}
+                                                onClick={() => setCurrentPage(page)}
+                                                className={`px-3 py-2 rounded ${
+                                                    currentPage === page
+                                                        ? "bg-blue-600 text-white"
+                                                        : "border border-gray-300 hover:bg-gray-100"
+                                                }`}
+                                            >
+                                                {page}
+                                            </button>
+                                        ))}
                                     </div>
-                                );
-                            })}
-                        </div>
+                                    
+                                    <button
+                                        onClick={() => setCurrentPage(Math.min(totalPages, currentPage + 1))}
+                                        disabled={currentPage === totalPages}
+                                        className="px-4 py-2 border border-gray-300 rounded disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-100"
+                                    >
+                                        Sau →
+                                    </button>
+                                </div>
+                            )}
+                        </>
                     )}
                 </div>
             </div>

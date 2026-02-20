@@ -8,6 +8,7 @@ import { useAuth } from "@/contexts/AuthContext";
 export default function LessonPage({ params }: { params: { id: string; lessonId: string } }) {
     const [lesson, setLesson] = useState<any>(null);
     const [enrollment, setEnrollment] = useState<any>(null);
+    const [allLessons, setAllLessons] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
     const [updating, setUpdating] = useState(false);
     const [error, setError] = useState("");
@@ -16,6 +17,7 @@ export default function LessonPage({ params }: { params: { id: string; lessonId:
     useEffect(() => {
         loadLesson();
         loadEnrollment();
+        loadAllLessons();
     }, []);
 
     const loadLesson = async () => {
@@ -30,11 +32,20 @@ export default function LessonPage({ params }: { params: { id: string; lessonId:
         }
     };
 
+    const loadAllLessons = async () => {
+        try {
+            const res = await api.get(`/lessons/course/${params.id}`);
+            setAllLessons(res.data || []);
+        } catch (err) {
+            console.error("Failed to load lessons:", err);
+        }
+    };
+
     const loadEnrollment = async () => {
         try {
             const enrollmentsRes = await api.get("/enrollments");
             const userEnrollment = enrollmentsRes.data.find(
-                (e: any) => e.course.id === parseInt(params.id)
+                (e: any) => e.course.id === params.id
             );
             setEnrollment(userEnrollment);
         } catch (err) {
@@ -62,6 +73,17 @@ export default function LessonPage({ params }: { params: { id: string; lessonId:
             setUpdating(false);
         }
     };
+
+    // Get current lesson index
+    const currentIndex = allLessons.findIndex(l => l.id === params.lessonId);
+    const prevLesson = currentIndex > 0 ? allLessons[currentIndex - 1] : null;
+    const nextLesson = currentIndex < allLessons.length - 1 ? allLessons[currentIndex + 1] : null;
+
+    // Check if content is video URL
+    const isVideoUrl = lesson?.content?.startsWith('http') && 
+                       (lesson?.content?.includes('youtube.com') || 
+                        lesson?.content?.includes('youtu.be') ||
+                        lesson?.content?.includes('.mp4'));
 
     if (loading) {
         return (
