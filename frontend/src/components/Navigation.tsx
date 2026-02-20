@@ -57,7 +57,16 @@ export default function Navigation() {
                                                 </div>
                                             </div>
 
-                                            {/* User ID */}
+                                            {/* User ID and Role */}
+                                            <div className="bg-gray-50 p-3 rounded text-sm mb-3">
+                                                <p className="text-gray-600 text-xs font-semibold">VAI TRÒ</p>
+                                                <p className="text-gray-800 font-semibold" style={{
+                                                    color: getRoleColor(user.role).text,
+                                                }}>
+                                                    {getRoleLabel(user.role)}
+                                                </p>
+                                            </div>
+
                                             <div className="bg-gray-50 p-3 rounded text-sm">
                                                 <p className="text-gray-600 text-xs font-semibold">ID NGƯỜI DÙNG</p>
                                                 <p className="text-gray-800 font-mono text-xs break-all">{user.id}</p>
@@ -66,14 +75,17 @@ export default function Navigation() {
 
                                         {/* Menu Items */}
                                         <div className="space-y-2">
-                                            <Link href="/profile">
-                                                <button
-                                                    onClick={() => setShowMenu(false)}
-                                                    className="w-full text-left px-4 py-2 hover:bg-gray-100 rounded transition text-gray-700 font-semibold"
-                                                >
-                                                    ⚙️ Cài đặt hồ sơ
-                                                </button>
-                                            </Link>
+                                            {user.role === 'STUDENT' && (
+                                                <Link href="/profile">
+                                                    <button
+                                                        onClick={() => setShowMenu(false)}
+                                                        className="w-full text-left px-4 py-2 hover:bg-gray-100 rounded transition text-gray-700 font-semibold"
+                                                    >
+                                                        ⚙️ Cài đặt hồ sơ
+                                                    </button>
+                                                </Link>
+                                            )}
+
                                             <Link href="/dashboard">
                                                 <button
                                                     onClick={() => setShowMenu(false)}
@@ -83,16 +95,22 @@ export default function Navigation() {
                                                 </button>
                                             </Link>
 
-                                            {/* Admin Dashboard Link - Only for ADMIN role */}
+                                            {/* Admin/Manager Dashboard Links */}
                                             {user.role === 'ADMIN' && (
                                                 <Link href="/admin">
                                                     <button
                                                         onClick={() => setShowMenu(false)}
-                                                        className="w-full text-left px-4 py-2 hover:bg-yellow-100 rounded transition text-amber-700 font-semibold bg-yellow-50"
+                                                        className="w-full text-left px-4 py-2 hover:bg-red-100 rounded transition text-red-700 font-semibold bg-red-50"
                                                     >
-                                                        👑 Trang Quản Trị
+                                                        ⚙️ Quản lý Người dùng
                                                     </button>
                                                 </Link>
+                                            )}
+
+                                            {(user.role === 'MANAGER' || user.role === 'HR') && (
+                                                <div className="text-xs text-gray-500 px-4 py-2 bg-blue-50 rounded">
+                                                    ℹ️ Bạn có quyền truy cập các chức năng chỉ xem
+                                                </div>
                                             )}
 
                                             {/* Logout Button */}
@@ -121,4 +139,26 @@ export default function Navigation() {
             </div>
         </nav>
     );
+}
+
+function getRoleColor(role: string): { text: string; bg: string } {
+    const colors: { [key: string]: { text: string; bg: string } } = {
+        ADMIN: { text: '#991b1b', bg: '#fee2e2' },
+        MANAGER: { text: '#92400e', bg: '#fef3c7' },
+        HR: { text: '#1e40af', bg: '#dbeafe' },
+        INSTRUCTOR: { text: '#166534', bg: '#dcfce7' },
+        STUDENT: { text: '#5b21b6', bg: '#e9d5ff' },
+    };
+    return colors[role] || { text: '#374151', bg: '#f3f4f6' };
+}
+
+function getRoleLabel(role: string): string {
+    const labels: { [key: string]: string } = {
+        ADMIN: '⚙️ Quản trị viên',
+        MANAGER: '📊 Quản lý',
+        HR: '👥 Nhân sự',
+        INSTRUCTOR: '👨‍🏫 Giáo viên',
+        STUDENT: '📚 Học sinh',
+    };
+    return labels[role] || role;
 }
