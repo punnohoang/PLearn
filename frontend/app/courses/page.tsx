@@ -73,8 +73,8 @@ export default function CoursesPage() {
 
     // Filter & Search
     const filteredCourses = courses.filter(course => {
-        const matchSearch = course.title?.toLowerCase().includes(searchQuery.toLowerCase()) || 
-                           course.description?.toLowerCase().includes(searchQuery.toLowerCase());
+        const matchSearch = course.title?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+            course.description?.toLowerCase().includes(searchQuery.toLowerCase());
         return matchSearch;
     });
 
@@ -180,7 +180,7 @@ export default function CoursesPage() {
                 {/* Available Courses */}
                 <div>
                     <h2 className="text-3xl font-bold mb-6">🔍 Tất cả khóa học ({filteredCourses.length})</h2>
-                    
+
                     {/* Search & Filter */}
                     <div className="mb-6 space-y-4 bg-white p-6 rounded-lg shadow">
                         <input
@@ -208,7 +208,7 @@ export default function CoursesPage() {
                                             <div className="w-full h-40 bg-gradient-to-br from-blue-400 to-purple-500 rounded-lg mb-4 flex items-center justify-center">
                                                 <span className="text-white text-4xl">📚</span>
                                             </div>
-                                            
+
                                             <h3 className="font-bold text-xl mb-2 line-clamp-2">{course.title}</h3>
                                             <p className="text-gray-600 text-sm mb-4 line-clamp-2">{course.description}</p>
                                             <p className="text-sm text-gray-500 mb-4">👨‍🏫 {course.instructor.name}</p>
@@ -244,23 +244,22 @@ export default function CoursesPage() {
                                     >
                                         ← Trước
                                     </button>
-                                    
+
                                     <div className="flex gap-2">
                                         {Array.from({ length: totalPages }, (_, i) => i + 1).map(page => (
                                             <button
                                                 key={page}
                                                 onClick={() => setCurrentPage(page)}
-                                                className={`px-3 py-2 rounded ${
-                                                    currentPage === page
+                                                className={`px-3 py-2 rounded ${currentPage === page
                                                         ? "bg-blue-600 text-white"
                                                         : "border border-gray-300 hover:bg-gray-100"
-                                                }`}
+                                                    }`}
                                             >
                                                 {page}
                                             </button>
                                         ))}
                                     </div>
-                                    
+
                                     <button
                                         onClick={() => setCurrentPage(Math.min(totalPages, currentPage + 1))}
                                         disabled={currentPage === totalPages}

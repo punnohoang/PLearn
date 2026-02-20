@@ -80,10 +80,10 @@ export default function LessonPage({ params }: { params: { id: string; lessonId:
     const nextLesson = currentIndex < allLessons.length - 1 ? allLessons[currentIndex + 1] : null;
 
     // Check if content is video URL
-    const isVideoUrl = lesson?.content?.startsWith('http') && 
-                       (lesson?.content?.includes('youtube.com') || 
-                        lesson?.content?.includes('youtu.be') ||
-                        lesson?.content?.includes('.mp4'));
+    const isVideoUrl = lesson?.content?.startsWith('http') &&
+        (lesson?.content?.includes('youtube.com') ||
+            lesson?.content?.includes('youtu.be') ||
+            lesson?.content?.includes('.mp4'));
 
     if (loading) {
         return (
