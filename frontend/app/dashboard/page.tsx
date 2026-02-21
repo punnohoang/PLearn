@@ -301,6 +301,12 @@ function InstructorDashboard({ user }: { user: any }) {
                         ➕ Tạo khóa học mới
                     </button>
                 </Link>
+
+                <Link href="/instructor/lessons">
+                    <button className="w-full bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 font-semibold mt-3">
+                        📹 Quản lý Video Bài học
+                    </button>
+                </Link>
             </div>
         </div>
     );

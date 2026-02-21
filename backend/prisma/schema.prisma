@@ -46,11 +46,13 @@ model Enrollment {
 model Lesson {
   id          String   @id @default(cuid())
   title       String
-  content     String   // markdown hoặc video URL
-  course      Course   @relation(fields: [courseId], references: [id])
+  content     String   // HTML content
+  videoUrl    String?  // YouTube, MP4, or other video URL
+  course      Course   @relation(fields: [courseId], references: [id], onDelete: Cascade)
   courseId    String
   order       Int      // thứ tự bài
   createdAt   DateTime @default(now())
+  updatedAt   DateTime @default(now()) @updatedAt
 }
 
 enum Role {

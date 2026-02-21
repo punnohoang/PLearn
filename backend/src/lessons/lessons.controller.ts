@@ -30,6 +30,15 @@ export class LessonsController {
     }
 
     @UseGuards(JwtAuthGuard)
+    @Patch(':id/video')
+    uploadVideo(
+        @Param('id') id: string,
+        @Body() { videoUrl }: { videoUrl: string }
+    ) {
+        return this.lessonsService.updateVideo(id, videoUrl);
+    }
+
+    @UseGuards(JwtAuthGuard)
     @Delete(':id')
     remove(@Param('id') id: string) {
         return this.lessonsService.remove(id);

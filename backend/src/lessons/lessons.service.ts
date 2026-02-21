@@ -34,6 +34,14 @@ export class LessonsService {
         });
     }
 
+    async updateVideo(id: string, videoUrl: string) {
+        return await this.prisma.lesson.update({
+            where: { id },
+            data: { videoUrl },
+            include: { course: true },
+        });
+    }
+
     async remove(id: string) {
         return await this.prisma.lesson.delete({
             where: { id },
