@@ -153,8 +153,8 @@ function StudentDashboard({ user }: { user: any }) {
                                             <div className="flex justify-between items-start mb-3">
                                                 <h3 className="font-bold text-lg">{enrollment.course.title}</h3>
                                                 <span className={`text-sm font-bold px-3 py-1 rounded ${enrollment.progress === 100 ? 'bg-green-100 text-green-800' :
-                                                        enrollment.progress >= 50 ? 'bg-blue-100 text-blue-800' :
-                                                            'bg-yellow-100 text-yellow-800'
+                                                    enrollment.progress >= 50 ? 'bg-blue-100 text-blue-800' :
+                                                        'bg-yellow-100 text-yellow-800'
                                                     }`}>
                                                     {enrollment.progress}%
                                                 </span>
@@ -162,8 +162,8 @@ function StudentDashboard({ user }: { user: any }) {
                                             <div className="w-full bg-gray-300 h-3 rounded-full overflow-hidden">
                                                 <div
                                                     className={`h-full transition-all ${enrollment.progress === 100 ? 'bg-green-500' :
-                                                            enrollment.progress >= 50 ? 'bg-blue-500' :
-                                                                'bg-yellow-500'
+                                                        enrollment.progress >= 50 ? 'bg-blue-500' :
+                                                            'bg-yellow-500'
                                                         }`}
                                                     style={{ width: `${enrollment.progress}%` }}
                                                 />

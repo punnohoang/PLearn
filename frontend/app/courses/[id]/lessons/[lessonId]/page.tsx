@@ -146,8 +146,43 @@ export default function LessonPage({ params }: { params: { id: string; lessonId:
                     </div>
                 </div>
 
+                {/* Video Display */}
+                {lesson.videoUrl && (
+                    <div className="bg-white rounded-lg shadow p-8 mb-6">
+                        <h2 className="text-xl font-bold mb-4">📹 Video Bài Học</h2>
+                        {lesson.videoUrl.includes('youtube.com/embed') ? (
+                            <iframe
+                                width="100%"
+                                height="500"
+                                src={lesson.videoUrl}
+                                title={lesson.title}
+                                frameBorder="0"
+                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                allowFullScreen
+                            />
+                        ) : lesson.videoUrl.endsWith('.mp4') || lesson.videoUrl.includes('.mp4') ? (
+                            <video
+                                width="100%"
+                                height="500"
+                                controls
+                                className="rounded-lg"
+                            >
+                                <source src={lesson.videoUrl} type="video/mp4" />
+                                Trình duyệt của bạn không hỗ trợ video.
+                            </video>
+                        ) : (
+                            <div
+                                dangerouslySetInnerHTML={{
+                                    __html: lesson.videoUrl,
+                                }}
+                            />
+                        )}
+                    </div>
+                )}
+
                 {/* Lesson Content */}
                 <div className="bg-white rounded-lg shadow p-8 mb-6">
+                    <h2 className="text-xl font-bold mb-4">📖 Nội dung bài học</h2>
                     <div
                         className="prose prose-lg max-w-none text-gray-800"
                         dangerouslySetInnerHTML={{

@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import api from '@/lib/api';
+import api from '../lib/api';
 
 interface VideoUploadModalProps {
     isOpen: boolean;
@@ -25,7 +25,7 @@ export default function VideoUploadModal({
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        
+
         if (!videoUrl.trim()) {
             setError('Vui lòng nhập URL video');
             return;
@@ -85,11 +85,10 @@ export default function VideoUploadModal({
                                     key={type.value}
                                     type="button"
                                     onClick={() => setVideoType(type.value)}
-                                    className={`p-2 rounded-lg text-sm font-semibold transition ${
-                                        videoType === type.value
-                                            ? 'bg-blue-600 text-white'
-                                            : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                                    }`}
+                                    className={`p-2 rounded-lg text-sm font-semibold transition ${videoType === type.value
+                                        ? 'bg-blue-600 text-white'
+                                        : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                                        }`}
                                 >
                                     {type.label}
                                 </button>

@@ -79,7 +79,7 @@ export default function InstructorLessonsPage() {
 
     const handleRemoveVideo = async (lessonId: string) => {
         if (!confirm('Xóa video này?')) return;
-        
+
         try {
             await api.patch(`/lessons/${lessonId}/video`, { videoUrl: null });
             if (selectedCourse) {
@@ -120,11 +120,10 @@ export default function InstructorLessonsPage() {
                             <button
                                 key={course.id}
                                 onClick={() => handleCourseChange(course.id)}
-                                className={`p-4 rounded-lg border-2 transition text-left ${
-                                    selectedCourse === course.id
+                                className={`p-4 rounded-lg border-2 transition text-left ${selectedCourse === course.id
                                         ? 'border-green-600 bg-green-50'
                                         : 'border-gray-200 hover:border-green-300'
-                                }`}
+                                    }`}
                             >
                                 <p className="font-bold text-lg">{course.title}</p>
                                 <p className="text-sm text-gray-600">
@@ -179,7 +178,7 @@ export default function InstructorLessonsPage() {
                                                 <div className="bg-white p-2 rounded border border-gray-300 mb-3 break-all text-xs text-gray-700 font-mono">
                                                     {lesson.videoUrl}
                                                 </div>
-                                                
+
                                                 {/* Video Preview Thumbnail */}
                                                 {lesson.videoUrl.includes('youtube') && (
                                                     <div className="mb-3 rounded overflow-hidden bg-black" style={{ aspectRatio: '16/9' }}>
